@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<section class = "card">
+    <h2>Edit expense #{{ e.id }}</h2>
+    <form method = "post" class = "col">
+        <label>Amount <input name = "amount" value= "{{ '%.2f' % (e.amount_cents / 100) }}" required></label>
+        <label>Category <input name = "category" value="{{ e.category }}"></label>
+        <label>Date <input name = "date" type = "date" value="{{ e.date }}"></label>
+        <label>Note <input name = "note" value = "{{e.note}}"></label>
+        <div class = "row"><button>Save</button><a href = "{{url_for('index') }}">Cancel</a></div>
+    </form>
+</section>
+{% endblock %}
