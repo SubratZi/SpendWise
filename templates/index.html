@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<section class = "card">
+    <h2> Add expense</h2>
+    <form method="post" action = " {{ url_for('add')}}" class = "row">
+        <input name="amount" placeholder="Amount(12.5)" required inputmode = "decimal">
+        <input name = "category" placeholder="Category" list="cats">
+        <datalist id="cats">{% for c in categories %}<option value="{{c}}">{% endfor %}</datalist>
+            <input name = "date" type = "date" value="{{today}}" required>
+            <input name = "note" placeholder = "Note (optional)">
+            <button>Add</button>
+        </form>
+    </section>
+
+    <section class = "card">
+        <div class = "row between">
+            <h2>Expenses</h2>
+            <form method = "get">
+                <select name = "category" onchange = "this.form.submit()">
+                    <option value="">All categories</option>
+                        {% for c in categories %}<option value="{{ c }}" {{ 'selected' if c == selected }}> {{ c }}</option>
+                        {% endfor %}
+                </select>
+            </form>
+        </div>
+        {% if expenses %}
+        <div class="scroll">
+        <table>
+            <tr><th>Date</th><th class = "num">Amount</th>
+            <th>Category</th><th>Note</th><th></th></tr>
+            {% for e in expenses %}
+            <tr>
+                <td> {{e.date}} </td>
+                <td class = "num">{{e.amount_cents | money}}</td>
+                <td><span class = "tag">{{ e.category }}</span></td>
+                <td>{{ e.note }}</td>
+                <td class = "actions">
+                    <a href = "{{ url_for('edit', expense_id=e.id)}}">Edit</a>
+                    <form method="post" action="{{ url_for ('delete', expense_id = e.id)}}"
+                     onsubmit = "return confirm('Delete this expense?')"><button class= "link">Delete</button></form>
+                </td>
+            </tr>
+            {% endfor %}
+            <tr class="total"><td>Total</td><td class="num">{{total | money}}</td><td colspan = "3"></td>
+            </tr>
+        </table>
+        </div>
+        {% else %}<p class="muted">No expenses yet. Add your first one above.</p>{% endif %}
+    </section>
+    {% endblock %}
