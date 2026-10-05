@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang = "en">
+<head>
+    <meta charset="utf-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1">
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="{{url_for('index')}}">Expense Tracker</a></header>
+</head>
+<body>
+    <main>
+        {% for msg in get_flashed_messages() %}<div class="flash">{{msg}}</div>{% endfor %}
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
