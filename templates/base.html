@@ -4,12 +4,31 @@
     <meta charset="utf-8">
     <meta name = "viewport" content = "width=device-width, initial-scale=1">
     <title>Expense Tracker</title>
-    <link rel="stylesheet" href="{{url_for('index')}}">Expense Tracker</a></header>
+    <link rel = "preconnect" href="https://fonts.googleapis.com">
+    <link rel = "preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href = "https://fonts.googleapis.com/css2?family=Spectral:wght@500;600&family=Work+Sans:wght@400; 500; 600&display=swap" rel = "stylesheet">
+    <link rel="stylesheet" href="{{url_for('static'), filename = 'style.css'}}">
 </head>
 <body>
+    <header>
+        <a class="wordmark" href=" {{url_for('index') }}"><span>$</span> Ledger</a>
+    </header>
     <main>
-        {% for msg in get_flashed_messages() %}<div class="flash">{{msg}}</div>{% endfor %}
-        {% block content %}{% endblock %}
+        {% for category, msg in get_flashed_messages(with_categories = true) %}
+        <div class="flash flash {{ category }}">
+            <span>{{msg}}</span>
+            <button type = "button" class="flash-close" onclick="this.parentElement.remove()" aria-label = "Dismiss">&times;</button>
+        </div>
+        {% endfor %}
+        {%block content %}{% endblock %}
     </main>
+    <script>
+        document.querySelectorAll('.flash').forEach(function (el, i) {
+            setTimeout(function () {
+                el.classList.add('flash-hide');
+                setTimeout(function () {el.remove();}, 300);
+            },3000 + i *300);
+        });
+    </script>
 </body>
 </html>
