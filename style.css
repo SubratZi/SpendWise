@@ -1,3 +1,185 @@
 :root {
-    
+    --bg:#FAFAF8; --panel:#FFFFFF; --text:#1C1F1D; --muted:#6B7268;
+    --accent:#1F4D3D; --accent-contrast:#FFFFFF; --line:#E3E1DA;
+    --success:#1F4D3D; --error:#A33B2E;
+}
+
+@media (prefers-color-scheme){
+    :root {
+        --bg: #15181A; --panel:#1C201F; --text:#EDEEEA; --muted: #94978F;
+        --accent: #5FA880; --accent-contrast:#0E1210; --line:#2A2E2B;
+        --success: #5FA880; --error:#E08370;
+    }
+}
+
+* { box-sizing: border-box}
+body{
+    margin: 0;
+    background:var(--bg);
+    color: var(--text);
+    font-family: "Work Sans", system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+}
+
+.amount, .wordmark, h1, h2 {font-family: "Spectral", Georgia, serif; }
+
+header {
+    padding: 28px 20px 20px;
+    border-bottom: 1px solid var(--line);    
+}
+
+header .wordmark {
+    display: block;
+    max-width: 640px;
+    margin:0 auto;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: 0.01rem;
+}
+
+header .wordmark span {color: var(--accent)}
+
+main{ max-width: 640px; margin: 0 auto; padding: 36px 20px 60px; }
+
+section {margin-bottom:44px}
+h2{
+    margin: 0 0 18px;
+    font-size:16px;
+    font-weight: 600;
+    color: var(--muted);
+}
+
+form.add-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 10px;
+}
+
+form.add-form .note-field { grid-column: 1/ -1; }
+form.add-form .submit-row { grid-column: 1/ -1; }
+
+label { display: flex; flex-direction: column; gap:5px; color: var(--muted); font-size: 13px;}
+
+input, select {
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--panel);
+    color: var(--text);
+    font: inherit;
+    width:100%;
+}
+
+input:focus, select:focus, button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset:1px;
+}
+
+button {
+    padding: 10px 20px;
+    border: 0;
+    border-radius: 6px;
+    background: var(--accent);
+    color: var(--accent-contrast);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+button:hover {opacity: 0.9;}
+a.btn-secondary {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 14px;
+    align-self: center;
+}
+a.btn-secondary:hover {color: var(--text); }
+
+.list-header { display: flex; align-items: baseline; justify-content:space-between; gap: 16px}
+.list-header select { width: auto; padding: 6px 10px; font-size:13px}
+
+.ledger{
+    width: 100%; border-collapse:collapse;
+}
+.ledger thead th{
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    padding: 0 4px 10px;
+    border-bottom: 1px solid var(--line);
+}
+
+.ledger thead th.num { text-align: right;}
+.ledger tbody tr { border-bottom: 1px solid var(--line);}
+.ledger tbody tr:hover {background: color-mix(in srgb, var(--line) 35%, transparent);}
+.ledger td { padding: 12px 4px; vertical-align: middle;}
+.ledger td.date { color: var(--muted); font-size: 13px; white-space: nowrap;}
+.ledger td.amount {text-align: right; font-variant-numeric: tabular-nums; font-size:15.5px ;}
+.ledger td.note {color: var(--muted); font-size: 13px}
+.ledger .category-tag {
+    display: inline-block; font-size: 12px; color: var(--muted);
+    border:1px solid var(--line); border-radius: 99px; padding :2px 10px;
+}
+.ledger tfoot td { padding-top :16px; font-weight: 600; border-bottom: 0;}
+.ledger tfoot td.amount { font-family: "Spectral", serif; font-size: 18px;}
+.row-actions { display: flex; gap:2px; justify-content: flex-end;}
+.icon-btn {
+    display: inline-flex; align-items: center; 
+    width: 30px; height: 30px; border-radius: 6px;
+    background: none; border: 0; color: var(--muted); cursor: pointer; text-decoration: none;
+}
+
+.icon-btn:hover{ background: var(--line); color: var(--text);}
+.icon-btn.danger:hover {color: var(--error);}
+.icon-btn svg { width: 16px; height: 16px;}
+.row-actions form {margin: 0;}
+
+.empty-state {
+    padding: 32px 0; text-align: center; color: var(--muted); font-size: 14px;
+    border: 1px dashed var(--line); border-radius : 8px;
+}
+
+form.edit-form {display:flex; flex-direction:column; gap:14px; max-width: 36px;}
+.form-actions { display: flex; align-items:center; gap:16px; margin-top: 4px;}
+
+.flash {
+    display : flex; align-items:center; justify-content:space-between; gap: 12px;
+    padding: 11px 14px; border-radius: 6px; margin-bottom: 20px;
+    font-size: 14px; border: 1px solid transparent;
+    animation: flash-in 0.2s ease-out;
+}
+
+.flash-success { background: color-mix(in srgb, var(--success) 12%, var(--panel));
+color: var(--success); border-color: color-mix(in srgb ,var(--success) 30%, transprent);
+}
+
+.flash-error{
+    background: color-mix(in srgb, var(--error) 12%, var(--panel));
+    color: var(--error); border-color: color-mix(in srgb, var(--error) 30%, transparent);
+}
+
+.flash-close {
+    background: none; border:0; color: inherit; font-size: 16px; line-height: 1; padding: 0; cursor: pointer; opacity:0.7;
+}
+.flash-close:hover {opacity: 1;}
+.flash-hide { opacity: 0; transform: translateY(-4px); transition: opacity 0.3s, transform 0.3s;}
+
+@keyframes flash-in { from{opacity: 0; transform: translateY(-4px)}to {opacity:1; transform: translateY(0);}}
+
+@media (prefers-reduced-motion:reduce){
+    .flash, .flash-hide { animation:none; transition:none;}
+}
+
+@media(max-width: 480px){
+    form.add-form { grid-template-columns:1fr;}
+    .ledger thead { display: none}
+    .ledger tbody tr { display: block; padding: 10px 0;}
+    .ledger td { display: flex; justify-content: space-between; padding: 3px 4px; border: 0 ;}
+    .ledger td.amount, .ledger td::before { font-weight: 500;}
+    .ledger td.note:empty { display: none; }
+    .row-actions {justify-content: flex-start;}
 }
