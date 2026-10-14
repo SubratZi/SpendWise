@@ -39,7 +39,7 @@ def print_table(rows):
 
 def cmd_add(conn, args):
     new_id = db.add_expense(conn, args.date, args.amount, args.category, args.note)
-    print(f"Added expense {new_id}: {format_money(args.amount)} ({args.category}) on {args.date}")
+    print(f"Added expense {new_id}: {format_money(args.amount)} ({args.category}) on {args.date.isoformat()}")
 
 def cmd_list(conn, args):
     print_table(db.list_expenses(conn, category = args.category, limit = args.limit))
@@ -55,7 +55,7 @@ def cmd_edit(conn, args):
         sys.exit(f"No expense with id {args.id}")
     changed = db.update_expense(
         conn, args.id,
-        date = args.id,
+        date = args.date.isoformat(),
         amount_cents = args.amount,
         category = args.category,
         note = args.note,
