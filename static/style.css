@@ -138,6 +138,8 @@ a.btn-secondary:hover {color: var(--text); }
     background: none; border: 0; color: var(--muted); cursor: pointer; text-decoration: none;
 }
 
+.icon-btn { justify-content: center; }
+.icon-btn:hover { color: var(--accent); }
 .icon-btn:hover{ background: var(--line); color: var(--text);}
 .icon-btn.danger:hover {color: var(--error);}
 .icon-btn svg { width: 16px; height: 16px;}
