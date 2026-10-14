@@ -15,7 +15,7 @@
     </header>
     <main>
         {% for category, msg in get_flashed_messages(with_categories = true) %}
-        <div class="flash flash {{ category }}">
+        <div class="flash flash-{{ category }}">
             <span>{{msg}}</span>
             <button type = "button" class="flash-close" onclick="this.parentElement.remove()" aria-label = "Dismiss">&times;</button>
         </div>
