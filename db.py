@@ -1,3 +1,4 @@
+from categories import CATEGORY_NAMES
 import os
 import sqlite3
 
@@ -21,6 +22,13 @@ def init_db(conn):
         )
         """
     )
+
+    marks = ",".join("?" * len(CATEGORY_NAMES))
+    conn.execute(
+        f"UPDATE expenses SET category ='other' WHERE category NOT IN ({marks})",
+        CATEGORY_NAMES,
+    )
+    
     conn.commit()
 
 def add_expense(conn, date, amount_cents, category, note = ""):

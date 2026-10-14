@@ -2,6 +2,7 @@ import argparse
 import sys
 from datetime import date, datetime
 from decimal import Decimal, InvalidOperation
+from categories import CATEGORY_NAMES
 
 import db
 
@@ -67,7 +68,8 @@ def build_parser():
     sub = parser.add_subparsers(dest = "command", required = True)
     p = sub.add_parser("add", help = "add a new expense")
     p.add_argument("amount", type = parse_amount, help = "e.g. 12.5")
-    p.add_argument("-c", "--category", default="uncategorized")
+    p.add_argument("-c", "--category", choices= CATEGORY_NAMES, default= "other")
+    p.add_argument("-c", "--category", choices= CATEGORY_NAMES)
     p.add_argument("-n", "--note", default="")
     p.add_argument("-d", "--date", type=parse_date, default=date.today().isoformat(), help="YYYY-MM-DD (default: today)")
     p.set_defaults(func = cmd_add)

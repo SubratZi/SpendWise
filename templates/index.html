@@ -7,8 +7,9 @@
             <input name="amount" placeholder="Amount(12.5)" required inputmode = "decimal">
         </label>
         <label>Category
-            <input name = "category" placeholder="Category" list="cats">
-            <datalist id="cats">{% for c in categories %}<option value="{{c}}">{% endfor %}</datalist>
+            <select name = "category" required>
+                {%for c in categories %}<option value = "{{ c }}">{{ c| title }}</option>{% endfor %}
+            </select>
         </label>
         <label>Date
             <input name = "date" type = "date" value="{{today}}" required>
@@ -46,7 +47,7 @@
                 {% for e in expenses %}
                 <tr>
                     <td class = "date"> {{e.date }} </td>
-                    <td><span class = "category-tag">{{e.category}}</span></td>
+                    <td><span class = "category-tag" style="--dot: {{ e.category|cat_color }}">{{ e.category| title }}</span></td>
                     <td class="note">{{e.note}}</td>
                     <td class="amount"> {{e.amount_cents | money}}</td>
                     <td>

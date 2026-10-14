@@ -1,5 +1,6 @@
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
+from categories import CATEGORY_NAMES
 
 def parse_amount_cents(text):
     try:
@@ -18,3 +19,9 @@ def parse_date_iso(text):
 
 def format_money(cents):
     return f"{cents / 100:,.2f}"
+
+def parse_category(text):
+    value = (text or "").strip().lower() or "other"
+    if value not in CATEGORY_NAMES:
+        raise ValueError("Pick a category from the list")
+    return value
