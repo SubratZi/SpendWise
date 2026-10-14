@@ -73,3 +73,19 @@ def update_expense(conn, expense_id, **fields):
     )
     conn.commit()
     return cur.rowcount > 0
+
+def month_summary(conn, start, end):
+    total, count = conn.execute(
+        "SELECT COALESCE(SUM(amount_cents), 0), COUNT(*) FROM expenses "
+        "WHERE date >= ? AND date < ?", (start, end)
+    ).fetchone()
+    top = conn.execute(
+        "SELECT category, SUM(amount_cents) AS s FROM expenses"
+        "WHERE date >= ? AND date <? GROUP BY category ORDER BY s DESC LIMIT 1",
+        (start, end),
+    ).fetchone()
+    return {
+        "total": total, "count": count,
+        "top_category" : top["category"] if top else None,
+        "top_cents": top["s"] if top else 0,
+    }

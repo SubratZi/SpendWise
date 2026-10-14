@@ -25,3 +25,9 @@ def parse_category(text):
     if value not in CATEGORY_NAMES:
         raise ValueError("Pick a category from the list")
     return value
+
+def month_bounds(d):
+    start = d.replace(day = 1)
+    end = start.replace(year=start.year + 1, month = 1) if start.month == 12 \
+        else start.replace(month = start.month + 1)
+    return start.isoformat(), end.isoformat()

@@ -4,7 +4,7 @@ from typing import Optional
 from categories import CATEGORY_NAMES, CATEGORY_COLORS
 
 import db
-from utils import format_money, parse_amount_cents, parse_date_iso, parse_category
+from utils import format_money, parse_amount_cents, parse_date_iso, parse_category, month_bounds
 
 app = Flask(__name__)
 app.secret_key = "Amlh87*&!:AS;dwjAJSD(2lP)"
@@ -30,10 +30,15 @@ def index():
     expenses = db.list_expenses(conn, category = category)
     total = sum(e["amount_cents"] for e in expenses)
     categories = CATEGORY_NAMES
+    today = date.today()
+    start, end = month_bounds(today)
+    summary = db.month_summary(conn, start, end)
+    summary["daily_avg"] = summary["total"] // today.day
     return render_template(
         "index.html", expenses = expenses, total = total,
         categories = categories,
         selected = category,
+        summary = summary,
         today = date.today().isoformat(),
     )
 

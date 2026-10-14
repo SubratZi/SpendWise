@@ -1,5 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
+
+<section class="summary">
+    <div class="stat">
+        <span class = "stat-label"> Spent this month </span>
+        <span class = "stat-value"> {{ summary.total | money }} </span>
+        <span class = "stat-sub"> {{ summary.count }} transaction{{ '' if summary.count = 1 else 's' }}</span>
+    </div>
+    <div class="stat">
+        <span class="stat-label"> Top category </span>
+        <span class = "stat-value stat-text"> {{summary.top_category|title if summary.top_category else '-' }} </span>
+        <span class = "stat-sub"> {{summary.top_cents| money}}</span>
+    </div>
+    <div class="stat">
+        <span class="stat-label">Daily average</span>
+        <span class="stat-value"> {{ summary.daily_avg | money }} </span>
+        <span class="stat-sub">this month so far</span>
+    </div>
+</section>
+
+
 <section class = "card">
     <h2> Add expense</h2>
     <form method="post" action = " {{ url_for('add')}}" class = "row">
