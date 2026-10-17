@@ -23,9 +23,23 @@ def read_form() -> tuple[Optional[dict], Optional[str]]:
     except ValueError as err:
         return None,str(err)
 
+def read_filters():
+    def clean_date(key):
+        try:
+            return parse_date_iso(request.args.get(key, ""))
+        except ValueError:
+            return None
+    return {
+        "category" : request.args.get("category") or None,
+        "q" : request.args.get("q", "").strip() or None,
+        "start" : clean_date("start"),
+        "end" : clean_date("end"),
+    }
+
 @app.route("/")
 def index():
     conn = db.connect()
+    filters = read_filters()
     category = request.args.get("category") or None
     expenses = db.list_expenses(conn, category = category)
     total = sum(e["amount_cents"] for e in expenses)
@@ -37,6 +51,7 @@ def index():
     return render_template(
         "index.html", expenses = expenses, total = total,
         categories = categories,
+        f= filters,
         selected = category,
         summary = summary,
         today = date.today().isoformat(),

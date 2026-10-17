@@ -44,17 +44,20 @@
 </section>
 
 <section>
-    <div class = "list-header">
-        <h2>Expenses</h2>
-        <form method = "get">
-            <select name = "category" onchange = "this.form.submit()">
-                <option value="">All categories</option>
-                    {% for c in categories %}
-                    <option value="{{ c }}" {{ 'selected' if c == selected }}> {{ c }}</option>
-                    {% endfor %}
-            </select>
-        </form>
-    </div>
+   <div class="list-header"><h2>Expenses</h2></div>
+   <form method = "get" class = "toolbar">
+    <input type = "search" name  = "q" value = "{{ f.q or '' }}" placeholder = "Search notes or categories..." aria-label="Search">
+    <select name = "category" aria-label = "Category">
+        <option value = "">All Categories</option>
+        {% for c in categories %}
+        <option value="{{ c }}" {{ 'selected' if c == f.category }}> {{ c|title }}</option>
+        {% endfor %}
+    </select>
+    <input type = "date" name = "start" value = "{{ f.start or '' }}" aria-label = "From">
+    <input type = "date" name = "end" value = "{{ f.end or ''}}" aria-label = "To">
+    <button type = "submit">Apply</button>
+    {% if f.q or f.category or f.start or f.end %}<a class="btn-secondary" href="{{ url_form('index') }}">Clear</a>{% endif %}
+   </form>
 
         {% if expenses %}
         <table class="ledger">
@@ -94,7 +97,9 @@
             </tfoot>
         </table>
         {% else %}
-        <div class="empty-state"> No expenses recorded yet. Add your first one above.</div>
+        <div class = "empty-state">
+            {% if f.q or f.category or f.start or f.end %} No expenses match these filters.{% else %}No expenses recorded yet. Add your first one above. {% endif %}
+        </div>
         {% endif %}
     </section>
     {% endblock %}

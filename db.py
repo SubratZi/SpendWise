@@ -43,18 +43,26 @@ def add_expense(conn, date, amount_cents, category, note = ""):
 def get_expense(conn, expense_id):
     return conn.execute("SELECT * FROM expenses WHERE id = ?", (expense_id,)).fetchone()
 
-def list_expenses(conn, category=None, limit=None):
-    query = "SELECT * FROM expenses"
-    params = []
+def list_expenses(conn, category = None, q=None, start=None, end=None, limit=None):
+    where, params = [], []
     if category:
-        query += " WHERE category = ?"
-        params.append(category)
+        where.append("category = ?"); params.append(category)
+    if q:
+        esc = q.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+        where.append("(note LIKE ? ESCAPE '\\' OR category LIKE ? ESCAPE '\\')")
+        params +=[f"%{esc}%", f"%{esc}%"]
+    if start:
+        where.append("date >= ?"); params.append(start)
+    if end:
+        where.append("date <= ?"); params.append(end)
+    query = "SELECT * FROM expenses"
+    if where:
+        query += " WHERE " + " AND ".join(where)
     query += " ORDER BY date DESC, id DESC"
-
     if limit:
-        query +=" LIMIT ?"
-        params.append(limit)
-    return conn.execute(query,params).fetchall()
+        query += " LIMIT ?"; params.append(limit)
+    return conn.execute(query, params).fetchall()
+
 
 def delete_expense(conn, expense_id):
     cur = conn.execute("DELETE FROM expenses WHERE id = ?", (expense_id,))
