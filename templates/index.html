@@ -3,106 +3,142 @@
 
 <section class="summary">
     <div class="stat">
-        <span class = "stat-label"> Spent this month </span>
-        <span class = "stat-value"> {{ summary.total | money }} </span>
-        <span class = "stat-sub"> {{ summary.count }} transaction{{ '' if summary.count = 1 else 's' }}</span>
+        <span class="stat-label">Spent this month</span>
+        <span class="stat-value">{{ summary.total | money }}</span>
+        <span class="stat-sub">{{ summary.count }} transaction{{ '' if summary.count == 1 else 's' }}</span>
     </div>
     <div class="stat">
-        <span class="stat-label"> Top category </span>
-        <span class = "stat-value stat-text"> {{summary.top_category|title if summary.top_category else '-' }} </span>
-        <span class = "stat-sub"> {{summary.top_cents| money}}</span>
+        <span class="stat-label">Top category</span>
+        <span class="stat-value stat-text">{{ summary.top_category|title if summary.top_category else '-' }}</span>
+        <span class="stat-sub">{{ summary.top_cents | money }}</span>
     </div>
     <div class="stat">
         <span class="stat-label">Daily average</span>
-        <span class="stat-value"> {{ summary.daily_avg | money }} </span>
+        <span class="stat-value">{{ summary.daily_avg | money }}</span>
         <span class="stat-sub">this month so far</span>
     </div>
 </section>
 
-
-<section class = "card">
-    <h2> Add expense</h2>
-    <form method="post" action = " {{ url_for('add')}}" class = "row">
+<section class="card">
+    <h2>Add expense</h2>
+    <form method="post" action="{{ url_for('add') }}" class="add-form">
         <label>Amount
-            <input name="amount" placeholder="Amount(12.5)" required inputmode = "decimal">
+            <input name="amount" placeholder="12.50" required inputmode="decimal">
         </label>
         <label>Category
-            <select name = "category" required>
-                {%for c in categories %}<option value = "{{ c }}">{{ c| title }}</option>{% endfor %}
+            <select name="category" required>
+                {% for c in categories %}<option value="{{ c }}">{{ c|title }}</option>{% endfor %}
             </select>
         </label>
         <label>Date
-            <input name = "date" type = "date" value="{{today}}" required>
+            <input name="date" type="date" value="{{ today }}" required>
         </label>
-        <label class="note-field">
-            <input name = "note" placeholder = "Note (optional)">
+        <label class="note-field">Note
+            <input name="note" placeholder="Optional">
         </label>
-        <div class="submit-row">
-            <button>Add</button>
-        </div>
+        <div class="submit-row"><button type="submit">Add expense</button></div>
     </form>
 </section>
 
 <section>
-   <div class="list-header"><h2>Expenses</h2></div>
-   <form method = "get" class = "toolbar">
-    <input type = "search" name  = "q" value = "{{ f.q or '' }}" placeholder = "Search notes or categories..." aria-label="Search">
-    <select name = "category" aria-label = "Category">
-        <option value = "">All Categories</option>
-        {% for c in categories %}
-        <option value="{{ c }}" {{ 'selected' if c == f.category }}> {{ c|title }}</option>
-        {% endfor %}
-    </select>
-    <input type = "date" name = "start" value = "{{ f.start or '' }}" aria-label = "From">
-    <input type = "date" name = "end" value = "{{ f.end or ''}}" aria-label = "To">
-    <button type = "submit">Apply</button>
-    {% if f.q or f.category or f.start or f.end %}<a class="btn-secondary" href="{{ url_form('index') }}">Clear</a>{% endif %}
-    <a class="btn-secondary" href = "{{ url_for('export_csv', **request.args)}}"> Export CSV</a>
-   </form>
+    <div class="list-header"><h2>Expenses</h2></div>
+    <form method="get" class="toolbar">
+        <input type="search" name="q" value="{{ f.q or '' }}" placeholder="Search notes or categories..." aria-label="Search">
+        <select name="category" aria-label="Category">
+            <option value="">All categories</option>
+            {% for c in categories %}
+            <option value="{{ c }}" {{ 'selected' if c == f.category }}>{{ c|title }}</option>
+            {% endfor %}
+        </select>
+        <input type="date" name="start" value="{{ f.start or '' }}" aria-label="From">
+        <input type="date" name="end" value="{{ f.end or '' }}" aria-label="To">
+        <button type="submit">Apply</button>
+        {% if f.q or f.category or f.start or f.end %}<a class="btn-secondary" href="{{ url_for('index') }}">Clear</a>{% endif %}
+        <a class="btn-secondary" href="{{ url_for('export_csv', **request.args) }}">Export CSV</a>
+    </form>
 
-        {% if expenses %}
-        <div class="ledger-wrap">
-            <table class="ledger">
-                <thead>
-                    <tr>
-                        <th>Date</th><th class = "num">Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for e in expenses %}
-                    <tr>
-                        <td class = "date"> {{e.date }} </td>
-                        <td><span class = "category-tag" style="--dot: {{ e.category|cat_color }}">{{ e.category| title }}</span></td>
-                        <td class="note">{{e.note}}</td>
-                        <td class="amount"> {{e.amount_cents | money}}</td>
-                        <td>
-                            <div class="row-actions">
-                                <a class="icon-btn" href = "{{url_for ('edit', expense_id = e.id)}}" aria-label = "Edit" title = "Edit">
-                                <svg viewBox = "0 0 24 24" fill = "none" stroke = "currentColor" stroke-width = "2" stroke - linecap = "round" stroke-linejoin = "round"><path d = "M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d = "M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.5051-2.873.84a.5.5 0 0 1-.62-.621.84-2.873a2 2 0 0 1 .506-.852z"/></svg>
-                                </a>
-                                <form method = "post" action = " {{url_for('delete', expense_id = e.id)}}" onsubmit = "return confirm('Delete this expense?')">
-                                    <button type="submit" class="icon-btn danger" aria-label = "Delete" title = "Delete">
-                                        <svg viewBox = "0 0 24 24" fill = "none" stroke = "currentColor" stroke-width = "2" stroke-linecap = "round" stroke-linejoin = "round"><path d= "M3 6h18" /> <path d = "M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d = "M19 61-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="3">Total</td>
-                        <td class="amount">{{ total | money}}</td>
-                        <td></td>
-                    </tr>
-                </tfoot>
-            </table>
+    {% if expenses %}
+    <div class="ledger-wrap">
+        <table class="ledger">
+            <thead>
+                <tr><th>Date</th><th>Category</th><th>Note</th><th class="num">Amount</th><th></th></tr>
+            </thead>
+            <tbody>
+                {% for e in expenses %}
+                <tr>
+                    <td class="date">{{ e.date }}</td>
+                    <td><span class="category-tag" style="--dot: {{ e.category|cat_color }}">{{ e.category|title }}</span></td>
+                    <td class="note">{{ e.note }}</td>
+                    <td class="amount">{{ e.amount_cents | money }}</td>
+                    <td>
+                        <div class="row-actions">
+                            <a class="icon-btn" href="{{ url_for('edit', expense_id=e.id) }}" aria-label="Edit" title="Edit">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></svg>
+                            </a>
+                            <form method="post" action="{{ url_for('delete', expense_id=e.id) }}" class="delete-form" 
+                            data-desc="{{ e.category|title }}{% if e.note %} · {{ e.note }}{% endif %}"
+                            data-date="{{ e.date }}" data-amount="{{ e.amount_cents | money }}">
+                                <button type="submit" class="icon-btn danger" aria-label="Delete" title="Delete">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3">Total</td>
+                    <td class="amount">{{ total | money }}</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        {% if f.q or f.category or f.start or f.end %}No expenses match these filters.{% else %}No expenses recorded yet. Add your first one above.{% endif %}
+    </div>
+    {% endif %}
+</section>
+
+<dialog id = "confirm-dialog" aria-labelledby="confirm-title">
+    <div class="dialog-body">
+        <div class="dialog-icon" aria-hidden="true">
+            <svg viewBox = "0 0 24 24" fill = "none" stroke = "currentColor" stroke-width = "2" stroke-linecap= "round" stroke-linejoin = "round"><path d= "M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
         </div>
-        {% else %}
-        <div class = "empty-state">
-            {% if f.q or f.category or f.start or f.end %} No expenses match these filters.{% else %}No expenses recorded yet. Add your first one above. {% endif %}
-        </div>
-        {% endif %}
-    </section>
-    {% endblock %}
+        <h3 id= "confirm-title">Delete this expense?</h3>
+        <p class="dialog-detail"><strong id= "confirm-amount"></strong><span id= "confirm-desc"></span></p>
+        <p class="dialog-note">This cant be undone.</p>
+    </div>
+    <div class="dialog-actions">
+        <button type="button" class="btn-ghost" id="confirm-cancel">Cancel</button>
+        <button type="button" class="btn-danger" id="confirm-ok">Delete</button>
+    </div>
+</dialog>
+
+<script>
+    (function () {
+        var dlg = document.getElementById('confirm-dialog');
+         var pending = null;
+    document.querySelectorAll('.delete-form').forEach(function (form) {
+        form.addEventListener('submit', function (ev) {
+            if (!dlg.showModal) return;
+            ev.preventDefault();
+            pending = form;
+            document.getElementById('confirm-amount').textContent = form.dataset.amount;
+            document.getElementById('confirm-desc').textContent = form.dataset.desc + ' · ' + form.dataset.date;
+            dlg.showModal();
+            document.getElementById('confirm-cancel').focus();
+        });
+    });
+    document.getElementById('confirm-cancel').addEventListener('click', function () { dlg.close(); });
+    document.getElementById('confirm-ok').addEventListener('click', function () {
+        if (pending) { var f = pending; pending = null; dlg.close(); f.submit(); }
+    });
+    dlg.addEventListener('click', function (ev) { if (ev.target === dlg) dlg.close(); });
+    dlg.addEventListener('close', function () { pending = null; });
+})();
+</script>
+{% endblock %}

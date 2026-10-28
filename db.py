@@ -90,8 +90,8 @@ def month_summary(conn, start, end):
         "WHERE date >= ? AND date < ?", (start, end)
     ).fetchone()
     top = conn.execute(
-        "SELECT category, SUM(amount_cents) AS s FROM expenses"
-        "WHERE date >= ? AND date <? GROUP BY category ORDER BY s DESC LIMIT 1",
+        "SELECT category, SUM(amount_cents) AS s FROM expenses "
+        "WHERE date >= ? AND date < ? GROUP BY category ORDER BY s DESC LIMIT 1",
         (start, end),
     ).fetchone()
     return {

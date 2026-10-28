@@ -68,7 +68,7 @@ def index():
     conn = get_conn()
     filters = read_filters()
     category = request.args.get("category") or None
-    expenses = db.list_expenses(conn, category = category)
+    expenses = db.list_expenses(conn, **filters)
     total = sum(e["amount_cents"] for e in expenses)
     categories = CATEGORY_NAMES
     today = date.today()
