@@ -57,6 +57,7 @@
     <input type = "date" name = "end" value = "{{ f.end or ''}}" aria-label = "To">
     <button type = "submit">Apply</button>
     {% if f.q or f.category or f.start or f.end %}<a class="btn-secondary" href="{{ url_form('index') }}">Clear</a>{% endif %}
+    <a class="btn-secondary" href = "{{ url_for('export_csv', **request.args)}}"> Export CSV</a>
    </form>
 
         {% if expenses %}

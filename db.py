@@ -28,6 +28,8 @@ def init_db(conn):
         f"UPDATE expenses SET category ='other' WHERE category NOT IN ({marks})",
         CATEGORY_NAMES,
     )
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_expenses_date ON expenses(date)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_expenses_category ON expenses(category)")
     
     conn.commit()
 
