@@ -1,6 +1,9 @@
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
 from categories import CATEGORY_NAMES
+import os
+
+CURRENCY = os.environ.get("CURRENCY", "$")
 
 def parse_amount_cents(text):
     try:
@@ -18,7 +21,7 @@ def parse_date_iso(text):
         raise ValueError("Date must look like 1999-01-20")
 
 def format_money(cents):
-    return f"{cents / 100:,.2f}"
+    return f"{CURRENCY} {cents / 100:,.2f}"
 
 def parse_category(text):
     value = (text or "").strip().lower() or "other"

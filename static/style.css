@@ -2,6 +2,7 @@
     --bg:#FAFAF8; --panel:#FFFFFF; --text:#1C1F1D; --muted:#6B7268;
     --accent:#1F4D3D; --accent-contrast:#FFFFFF; --line:#E3E1DA;
     --success:#1F4D3D; --error:#A33B2E;
+    --gold:#B8892B;
 }
 
 @media (prefers-color-scheme){
@@ -9,6 +10,7 @@
         --bg: #15181A; --panel:#1C201F; --text:#EDEEEA; --muted: #94978F;
         --accent: #5FA880; --accent-contrast:#0E1210; --line:#2A2E2B;
         --success: #5FA880; --error:#E08370;
+        --gold:#D9A94A;
     }
 }
 
@@ -24,33 +26,33 @@ body{
 
 .amount, .wordmark, h1, h2 {font-family: "Spectral", Georgia, serif; }
 
-header {
-    padding: 28px 20px 20px;
-    border-bottom: 1px solid var(--line);    
+header { background: var(--accent); border-bottom: 3px solid var(--gold);}
+main{ max-width: 760px;}
+
+section.card, .ledger-wrap{
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 12px; padding: 22px; box-shadow: 0 1px 2px rgb(0 0 0 / .04);
 }
 
-header .wordmark {
-    display: block;
-    max-width: 640px;
-    margin:0 auto;
-    font-size: 22px;
-    font-weight: 600;
+h2 { text-transform: uppercase; letter-spacing: .08em; font-size: 12px;}
+
+.ledger td.amount, .stat-value, .ledger tfoot td.amount {
+    font-family: "IBM Plex Mono", ui-monospace, monospace; font-weight: 500;
+}
+
+.ledger tfoot td {
+    border-top: 3px double var(--line);
+}
+.ledger td.amount {
     color: var(--text);
-    text-decoration: none;
-    letter-spacing: 0.01rem;
+}
+.category-tag {
+    background: color-mix(in srgb, var(--dot, var(--muted)) 8%, transparent);
+}
+button{
+    box-shadow: 0 1px 0 rgb(0 0 0 /.1);
 }
 
-header .wordmark span {color: var(--accent)}
-
-main{ max-width: 640px; margin: 0 auto; padding: 36px 20px 60px; }
-
-section {margin-bottom:44px}
-h2{
-    margin: 0 0 18px;
-    font-size:16px;
-    font-weight: 600;
-    color: var(--muted);
-}
 
 form.add-form {
     display: grid;
@@ -191,7 +193,6 @@ color: var(--success); border-color: color-mix(in srgb ,var(--success) 30%, tran
 @media (max-width: 640px) {
     .toolbar{grid-template-columns: 1fr 1fr; }
     .toolbar input[type="search"] {grid-column: 1 / -1; }
-/* This is the end of the css appending. More in next commits! */
 }
 
 @keyframes flash-in { from{opacity: 0; transform: translateY(-4px)}to {opacity:1; transform: translateY(0);}}
