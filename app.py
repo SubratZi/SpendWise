@@ -23,6 +23,12 @@ app.config.update(
     SESSION_COOKIE_SECURE=os.environ.get("HTTPS_ONLY") == "1",
     PERMANENT_SESSION_LIFETIME=timedelta(days=14),
 )
+
+_hops = int(os.environ.get("TRUSTED_PROXY_HOPS", "0"))
+if _hops:
+    from werkzeug.middleware.proxy_fix import ProxyFix
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for= _hops, x_proto= _hops, x_host=_hops)
+
 app.jinja_env.filters["money"] = format_money
 app.jinja_env.filters["cat_color"] = lambda c: CATEGORY_COLORS.get(c, "#6B7268")
 
