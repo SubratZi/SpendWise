@@ -34,7 +34,3 @@ sleep 2
 systemctl --no-pager status SpendWise | head -n 8 || true
 
 PORT=$(grep -E '^PORT=' .env | cut -d= -f2)
-echo
-echo "Service started on port $PORT. Last step - add the address in the Nest dashboard:"
-echo "  https://dashboard.hackclub.app -> Domains tab"
-echo "  Domain: SpendWise.subratzi.hackclub.app   Target port: $PORT   -> Add Domain"
