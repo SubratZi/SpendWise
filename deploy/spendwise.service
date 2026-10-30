@@ -3,9 +3,9 @@ Description=SpendWise expense tracker
 After=network.target
 
 [Service]
-WorkingDirectory=%h/spendwise
-EnvironmentFile=%h/spendwise/.env
-ExecStart=/bin/bash %h/spendwise/deploy/start.sh
+WorkingDirectory=%h/SpendWise
+EnvironmentFile=%h/SpendWise/.env
+ExecStart=/bin/bash %h/SpendWise/deploy/start.sh
 Restart=always
 RestartSec=3
 

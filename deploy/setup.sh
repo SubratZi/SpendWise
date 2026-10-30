@@ -28,14 +28,14 @@ chmod 600 .env
 chmod 700 .
 
 mkdir -p "$HOME/.config/systemd/user"
-cp deploy/spendwise.service "$HOME/.config/systemd/user/"
+cp deploy/SpendWise.service "$HOME/.config/systemd/user/"
 systemctl --user daemon-reload
-systemctl --user enable --now spendwise
-systemctl --user restart spendwise
+systemctl --user enable --now SpendWise
+systemctl --user restart SpendWise
 
 PORT=$(grep -E '^PORT=' .env | cut -d= -f2)
 echo
 echo "Service started. One step left - give it a web address:"
-echo "  nest caddy add spendwise.$USER.hackclub.app --proxy localhost:$PORT"
+echo "  nest caddy add SpendWise.$USER.hackclub.app --proxy localhost:$PORT"
 echo "  systemctl --user reload caddy"
-echo "Then open https://spendwise.$USER.hackclub.app"
+echo "Then open https://SpendWise.$USER.hackclub.app"
