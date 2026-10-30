@@ -1,16 +1,16 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+PORT="${PORT:-8003}"
+
 [ -d .venv ] || python3 -m venv .venv
 .venv/bin/pip install -q -r requirements.txt
 
 if [ -f .env ]; then
     echo ".env already exists - keeping it."
 else
-    PORT=$(nest get_port | grep -Eo '[0-9]{4,5}' | head -1 || true)
-    if [ -z "$PORT" ]; then
-        echo "Couldn't read a port from 'nest get_port'."
-        echo "Run it yourself, then copy .env.example to .env and set PORT."
+    if ! python3 -c "import socket, sys; s = socket.socket(); s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1); s.bind(('0.0.0.0', int(sys.argv[1])))" "$PORT" 2>/dev/null; then
+        echo "Port $PORT is already in use. Pick another one, e.g.: PORT=8004 bash deploy/setup.sh"
         exit 1
     fi
     SECRET=$(python3 -c "import secrets; print(secrets.token_hex(32))")
@@ -25,17 +25,16 @@ ENVFILE
     echo "Created .env with port $PORT and a new SECRET_KEY."
 fi
 chmod 600 .env
-chmod 700 .
 
-mkdir -p "$HOME/.config/systemd/user"
-cp deploy/SpendWise.service "$HOME/.config/systemd/user/"
-systemctl --user daemon-reload
-systemctl --user enable --now SpendWise
-systemctl --user restart SpendWise
+cp deploy/SpendWise.service /etc/systemd/system/SpendWise.service
+systemctl daemon-reload
+systemctl enable --now SpendWise
+systemctl restart SpendWise
+sleep 2
+systemctl --no-pager status SpendWise | head -n 8 || true
 
 PORT=$(grep -E '^PORT=' .env | cut -d= -f2)
 echo
-echo "Service started. One step left - give it a web address:"
-echo "  nest caddy add SpendWise.$USER.hackclub.app --proxy localhost:$PORT"
-echo "  systemctl --user reload caddy"
-echo "Then open https://SpendWise.$USER.hackclub.app"
+echo "Service started on port $PORT. Last step - add the address in the Nest dashboard:"
+echo "  https://dashboard.hackclub.app -> Domains tab"
+echo "  Domain: SpendWise.subratzi.hackclub.app   Target port: $PORT   -> Add Domain"
