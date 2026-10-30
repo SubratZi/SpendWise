@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Create account · SpendWise{% endblock %}
+{% block content %}
+<section class="card auth-card">
+    <div class="auth-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6"/><path d="M22 11h-6"/></svg>
+    </div>
+    <h1 class="auth-title">Create your account</h1>
+    <p class="auth-sub">Your expenses stay private to you.</p>
+    <form method="post" class="auth-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label>Username
+            <input name="username" value="{{ username }}" autocomplete="username" autocapitalize="none" spellcheck="false"
+                   minlength="3" maxlength="30" pattern="[A-Za-z0-9._\-]{3,30}" required autofocus>
+            <span class="field-hint">3–30 characters: letters, numbers, . _ -</span>
+        </label>
+        <label>Password
+            <input type="password" name="password" autocomplete="new-password" minlength="8" maxlength="128" required>
+            <span class="field-hint">At least 8 characters.</span>
+        </label>
+        <label>Confirm password
+            <input type="password" name="confirm" autocomplete="new-password" minlength="8" maxlength="128" required>
+            <span class="field-hint" id="match-hint" aria-live="polite"></span>
+        </label>
+        <label class="show-pw">
+            <input type="checkbox" id="show-pw"> Show passwords
+        </label>
+        <button type="submit">Create account</button>
+    </form>
+    <p class="auth-switch">Already have an account? <a href="{{ url_for('login') }}">Sign in</a></p>
+</section>
+<script>
+(function () {
+    var pw = document.querySelector('input[name=password]');
+    var cf = document.querySelector('input[name=confirm]');
+    var hint = document.getElementById('match-hint');
+    function check() {
+        if (!cf.value) { hint.textContent = ''; hint.className = 'field-hint'; return; }
+        var same = pw.value === cf.value;
+        hint.textContent = same ? '\u2713 Passwords match' : 'Passwords don\u2019t match yet';
+        hint.className = 'field-hint ' + (same ? 'hint-ok' : 'hint-bad');
+    }
+    pw.addEventListener('input', check);
+    cf.addEventListener('input', check);
+    document.getElementById('show-pw').addEventListener('change', function () {
+        var type = this.checked ? 'text' : 'password';
+        pw.type = type; cf.type = type;
+    });
+})();
+</script>
+{% endblock %}

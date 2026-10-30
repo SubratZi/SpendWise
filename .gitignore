@@ -14,3 +14,7 @@ __pycache__/
 
 instance/
 *.log
+
+.secret_key
+.password_hash
+expenses.db

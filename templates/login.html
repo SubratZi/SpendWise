@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Sign in · SpendWise{% endblock %}
+{% block content %}
+<section class="card auth-card">
+    <div class="auth-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+    </div>
+    <h1 class="auth-title">Welcome back</h1>
+    <p class="auth-sub">Sign in to SpendWise.</p>
+    <form method="post" class="auth-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="next" value="{{ next or '' }}">
+        <label>Username
+            <input name="username" value="{{ username }}" autocomplete="username" autocapitalize="none" spellcheck="false" required {{ 'autofocus' if not username }}>
+        </label>
+        <label>Password
+            <input type="password" name="password" autocomplete="current-password" required {{ 'autofocus' if username }}>
+        </label>
+        <button type="submit">Sign in</button>
+    </form>
+    {% if signup_open %}
+    <p class="auth-switch">New here? <a href="{{ url_for('signup') }}">Create an account</a></p>
+    {% endif %}
+</section>
+{% endblock %}
+ 

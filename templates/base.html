@@ -1,38 +1,47 @@
 <!doctype html>
-<html lang = "en">
+<html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name = "viewport" content = "width=device-width, initial-scale=1">
-    <title>Expense Tracker</title>
-    <link rel = "preconnect" href="https://fonts.googleapis.com">
-    <link rel = "preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href = "https://fonts.googleapis.com/css2?family=Spectral:wght@500;600&family=Work+Sans:wght@400; 500; 600&display=swap" rel = "stylesheet">
-    <link rel="stylesheet" href="{{url_for('static', filename = 'style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SpendWise</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Spectral:wght@500;600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <header>
         <div class="header-inner">
-            <a class="wordmark" href=" {{url_for('index') }}">
-                <svg class = "mark" viewBox = "0 0 24 24" fill = "none" stroke = "currentColor" stroke-width = "2" stroke-linejoin = "round"><path d= "M4 19V5" /><path d = "M8 1514-5 3 3 5-7"/></svg>
-                <span>Ledger</span>
+            <a class="wordmark" href="{{ url_for('index') }}">
+                <svg class="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5"/><path d="M8 15l4-5 3 3 5-7"/></svg>
+                <span>SpendWise</span>
             </a>
+            {% if g.user %}
+            <div class="header-user">
+                <span class="whoami">{{ g.user.username }}</span>
+                <form method="post" action="{{ url_for('logout') }}" class="logout-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="signout">Sign out</button>
+                </form>
+            </div>
+            {% endif %}
         </div>
     </header>
     <main>
-        {% for category, msg in get_flashed_messages(with_categories = true) %}
+        {% for category, msg in get_flashed_messages(with_categories=true) %}
         <div class="flash flash-{{ category }}">
-            <span>{{msg}}</span>
-            <button type = "button" class="flash-close" onclick="this.parentElement.remove()" aria-label = "Dismiss">&times;</button>
+            <span>{{ msg }}</span>
+            <button type="button" class="flash-close" onclick="this.parentElement.remove()" aria-label="Dismiss">&times;</button>
         </div>
         {% endfor %}
-        {%block content %}{% endblock %}
+        {% block content %}{% endblock %}
     </main>
     <script>
         document.querySelectorAll('.flash').forEach(function (el, i) {
             setTimeout(function () {
                 el.classList.add('flash-hide');
-                setTimeout(function () {el.remove();}, 300);
-            },3000 + i *300);
+                setTimeout(function () { el.remove(); }, 300);
+            }, 3000 + i * 300);
         });
     </script>
 </body>

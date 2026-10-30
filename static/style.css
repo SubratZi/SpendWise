@@ -175,3 +175,37 @@ dialog#confirm-dialog::backdrop { background: rgb(15 20 18 / .45); backdrop-filt
 .btn-danger { background: var(--error); color: #fff; }
 @keyframes dialog-in { from { opacity: 0; transform: translateY(8px) scale(.98); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { dialog#confirm-dialog[open] { animation: none; } }
+
+
+.header-inner { display: flex; align-items: center; justify-content: space-between; }
+.header-user { display: flex; align-items: center; gap: 14px; }
+.whoami { color: var(--accent-contrast); font-size: 14px; opacity: .85; }
+.logout-form { margin: 0; }
+button.signout {
+    background: transparent; color: var(--accent-contrast);
+    border: 1px solid color-mix(in srgb, var(--accent-contrast) 40%, transparent);
+    padding: 6px 14px; font-size: 13px; font-weight: 500; box-shadow: none;
+}
+button.signout:hover { background: color-mix(in srgb, var(--accent-contrast) 14%, transparent); opacity: 1; }
+.auth-card { max-width: 400px; width: 100%; margin: 32px auto 0; text-align: center; }
+.auth-icon {
+    width: 48px; height: 48px; margin: 0 auto 14px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: color-mix(in srgb, var(--accent) 14%, var(--panel)); color: var(--accent);
+}
+.auth-icon svg { width: 22px; height: 22px; }
+.auth-title { margin: 0 0 4px; font-family: "Spectral", Georgia, serif; font-size: 24px; font-weight: 600; }
+.auth-sub { margin: 0 0 20px; color: var(--muted); font-size: 14px; }
+.auth-form { display: flex; flex-direction: column; gap: 16px; text-align: left; }
+.field-hint { font-size: 12px; color: var(--muted); opacity: .85; }
+.auth-switch { margin: 18px 0 0; font-size: 14px; color: var(--muted); }
+.auth-switch a { color: var(--accent); font-weight: 600; text-decoration: none; }
+.auth-switch a:hover { text-decoration: underline; }
+@media (max-width: 480px) { .whoami { display: none; } }
+
+
+label.show-pw { flex-direction: row; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
+label.show-pw input { width: auto; margin: 0; }
+.field-hint.hint-ok { color: var(--success); opacity: 1; }
+.field-hint.hint-bad { color: var(--error); opacity: 1; }
+#match-hint:empty { display: none; }

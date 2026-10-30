@@ -1,27 +1,29 @@
 {% extends "base.html" %}
+{% block title %}Edit expense · SpendWise{% endblock %}
 {% block content %}
-<section class = "card">
+<section class="card">
     <h2>Edit expense</h2>
-    <form method = "post" class = "edit-form">
+    <form method="post" class="edit-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <label>Amount
-            <input name="amount" value="{{ '%.2f' % (e.amount_cents/100)}}" required inputmode = "decimal">
+            <input name="amount" value="{{ '%.2f' % (e.amount_cents / 100) }}" required inputmode="decimal">
         </label>
         <label>Date
-            <input name = "date" type = "date" value = "{{e.date}}" required>
+            <input name="date" type="date" value="{{ e.date }}" required>
         </label>
         <label>Category
             <select name="category">
                 {% for c in categories %}
-                <option value="{{ c }}"  {{ 'selected' if c == e.category }}> {{ c|title }}</option>
+                <option value="{{ c }}" {{ 'selected' if c == e.category }}>{{ c|title }}</option>
                 {% endfor %}
             </select>
         </label>
         <label>Note
-            <input name = "note" value = "{{e.note}}">
+            <input name="note" value="{{ e.note }}">
         </label>
-        <div class = "form-actions">
-            <button type = "submit">Save Changes</button>
-            <a class = "btn-secondary" href = "{{ url_for('index') }}">Cancel</a>
+        <div class="form-actions">
+            <button type="submit">Save changes</button>
+            <a class="btn-secondary" href="{{ url_for('index') }}">Cancel</a>
         </div>
     </form>
 </section>
